@@ -1,0 +1,10 @@
+{
+  "functions": {
+    "api/community.js": {
+      "maxDuration": 30
+    },
+    "api/post-content.js": {
+      "maxDuration": 30
+    }
+  }
+}
