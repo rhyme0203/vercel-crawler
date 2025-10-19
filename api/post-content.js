@@ -40,7 +40,7 @@ module.exports = async (req, res) => {
       contentElement = $('div[class*="document_"][class*="rhymix_content"][class*="xe_content"]');
     } else if (url.includes('bobaedream.co.kr')) {
       siteCode = 'bobaedream';
-      contentElement = $('.docuCont03 .bodyCont');
+      contentElement = $('.content02, .docuCont03 .bodyCont, .docuCont03 .content');
     }
 
     if (!contentElement || contentElement.length === 0) {
