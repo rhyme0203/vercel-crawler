@@ -2,24 +2,25 @@ const fetch = require('node-fetch');
 const cheerio = require('cheerio');
 
 module.exports = async (req, res) => {
-  // CORS 헤더 설정
-  res.setHeader('Access-Control-Allow-Credentials', true);
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
-  res.setHeader('Access-Control-Allow-Headers', 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version');
-
-  if (req.method === 'OPTIONS') {
-    res.status(200).end();
-    return;
-  }
-
-  const { url } = req.query;
-  
-  if (!url) {
-    return res.status(400).json({ error: 'URL parameter is required' });
-  }
-
   try {
+    // CORS 헤더 설정
+    res.setHeader('Access-Control-Allow-Credentials', true);
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
+    res.setHeader('Access-Control-Allow-Headers', 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version');
+
+    if (req.method === 'OPTIONS') {
+      res.status(200).end();
+      return;
+    }
+
+    const { url } = req.query;
+    
+    if (!url) {
+      return res.status(400).json({ error: 'URL parameter is required' });
+    }
+
+    console.log('Fetching post content for URL:', url);
     const response = await fetch(url);
     const html = await response.text();
     const $ = cheerio.load(html);
@@ -109,10 +110,15 @@ module.exports = async (req, res) => {
     });
 
     const cleanedContent = textContent.trim();
+    console.log('Post content fetched successfully, length:', cleanedContent.length);
     res.json({ content: cleanedContent });
 
   } catch (error) {
     console.error('Error fetching post content:', error);
-    res.status(500).json({ error: 'Failed to fetch post content' });
+    res.status(500).json({ 
+      error: 'Failed to fetch post content',
+      message: error.message,
+      stack: error.stack
+    });
   }
 };
